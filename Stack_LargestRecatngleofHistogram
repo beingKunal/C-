@@ -1,0 +1,45 @@
+# Histogram Maximum rectangle area
+def getMaxArea(arr):
+    res = 0
+    minLeft = getMinLeft(arr)
+    minRight = getMinRight(arr)
+    for i in range(len(arr)):
+        curSum = 0
+        curSum += (i - minLeft[i] ) * arr[i]
+        curSum += (minRight[i] -i - 1) * arr[i]
+        res = max(res , curSum)
+    return res
+
+
+def getMinLeft(arr):
+    minLeft = [0 for i in range(len(arr))]
+    left = LifoQueue()
+    left.put(0)
+    minLeft[0] = -1
+    for i in range(1 , len(arr)):
+        while(not left.empty() and arr[left.queue[-1]] >= arr[i]):
+            left.get()
+        if(left.empty()):
+            minLeft[i] = -1
+        else:
+            minLeft[i] = left.queue[-1]
+        left.put(i)
+    return minLeft
+
+
+def getMinRight(arr):
+    minRight = [0 for i in range(len(arr))]
+    right = LifoQueue()
+    n = len(minRight)
+    right.put(n-1)
+    minRight[n-1] = n
+    for i in range(len(arr)-2 , -1 , -1):
+        while(not right.empty() and arr[right.queue[-1]] >= arr[i]):
+            right.get()
+        if(right.empty()):
+            minRight[i] = n
+        else:
+            minRight[i] = right.queue[-1]
+        right.put(i)
+    return minRight
+            
